@@ -40,6 +40,23 @@ class OpenApiFactory implements OpenApiFactoryInterface
                 ]
             ]
         ]);
+        $schemas['cartItem'] = new ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'cart' => [
+                    'type' => 'string',
+                    'example' => '/api/carts/1',
+                ],
+                'book' => [
+                    'type' => 'string',
+                    'example' => '/api/books/1'
+                ],
+                'quantity' => [
+                    'type' => 'integer',
+                    'example' => '1'
+                ]
+            ]
+        ]);
         $pathItem = new PathItem(
             post: new Operation(
                 operationId:'postApiLogin',
@@ -58,9 +75,6 @@ class OpenApiFactory implements OpenApiFactoryInterface
                         'description' => 'Utilisateur connecté',
                         'content' => [
                             'application/json' => [
-                                'schema' => [
-                                    '$ref'=> '#/components/schemas/User-read.User'
-                                ]
                             ]
                         ],
                     ]

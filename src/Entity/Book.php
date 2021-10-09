@@ -7,11 +7,14 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    denormalizationContext:['groups'=>['write:book']]
+)]
 class Book
 {
     /**
@@ -24,42 +27,50 @@ class Book
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['write:book','read:cart'])]
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['write:book'])]
     private $author;
 
     /**
      * @ORM\Column(type="text")
      */
+    #[Groups(['write:book'])]
     private $description;
 
     /**
      * @ORM\Column(type="float")
      */
+    #[Groups(['write:book'])]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
+    #[Groups(['write:book'])]
     private $quantity;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books")
+     * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books", cascade={"persist"})
      */
+    #[Groups(['write:book'])]
     private $category;
 
+
     /**
-     * @ORM\ManyToMany(targetEntity=Cart::class, mappedBy="book")
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="book", orphanRemoval=true)
      */
-    private $carts;
+    private $cartItems;
 
     public function __construct()
     {
         $this->category = new ArrayCollection();
         $this->carts = new ArrayCollection();
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -151,28 +162,32 @@ class Book
         return $this;
     }
 
+    
     /**
-     * @return Collection|Cart[]
+     * @return Collection|CartItem[]
      */
-    public function getCarts(): Collection
+    public function getCartItems(): Collection
     {
-        return $this->carts;
+        return $this->cartItems;
     }
 
-    public function addCart(Cart $cart): self
+    public function addCartItem(CartItem $cartItem): self
     {
-        if (!$this->carts->contains($cart)) {
-            $this->carts[] = $cart;
-            $cart->addBook($this);
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setBook($this);
         }
 
         return $this;
     }
 
-    public function removeCart(Cart $cart): self
+    public function removeCartItem(CartItem $cartItem): self
     {
-        if ($this->carts->removeElement($cart)) {
-            $cart->removeBook($this);
+        if ($this->cartItems->removeElement($cartItem)) {
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getBook() === $this) {
+                $cartItem->setBook(null);
+            }
         }
 
         return $this;

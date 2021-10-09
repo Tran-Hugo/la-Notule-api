@@ -12,7 +12,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CartRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    itemOperations:[
+        'get'
+    ],
+    normalizationContext:['groups'=>['read:cart']]
+)]
 class Cart
 {
     /**
@@ -28,19 +33,20 @@ class Cart
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Book::class, inversedBy="carts")
-     */
-    private $book;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:cart')]
     private $owner;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="cart", orphanRemoval=true)
+     */
+    #[Groups('read:cart')]
+    private $cartItems;
 
     public function __construct()
     {
-        $this->book = new ArrayCollection();
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -65,29 +71,6 @@ class Cart
         return $this;
     }
 
-    /**
-     * @return Collection|Book[]
-     */
-    public function getBook(): Collection
-    {
-        return $this->book;
-    }
-
-    public function addBook(Book $book): self
-    {
-        if (!$this->book->contains($book)) {
-            $this->book[] = $book;
-        }
-
-        return $this;
-    }
-
-    public function removeBook(Book $book): self
-    {
-        $this->book->removeElement($book);
-
-        return $this;
-    }
 
     public function getOwner(): ?string
     {
@@ -97,6 +80,36 @@ class Cart
     public function setOwner(string $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CartItem[]
+     */
+    public function getCartItems(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addCartItem(CartItem $cartItem): self
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setCart($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartItem(CartItem $cartItem): self
+    {
+        if ($this->cartItems->removeElement($cartItem)) {
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getCart() === $this) {
+                $cartItem->setCart(null);
+            }
+        }
 
         return $this;
     }
