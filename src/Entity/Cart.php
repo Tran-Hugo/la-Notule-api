@@ -16,6 +16,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
     itemOperations:[
         'get'
     ],
+    collectionOperations:[
+        'get'
+    ],
     normalizationContext:['groups'=>['read:cart']]
 )]
 class Cart
