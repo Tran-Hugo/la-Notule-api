@@ -38,7 +38,7 @@ class Cart
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User','read:cart')]
+    #[Groups('write:User','read:cart','read:User')]
     private $owner;
 
     /**

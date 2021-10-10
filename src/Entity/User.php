@@ -22,16 +22,11 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         ]
     ],
     itemOperations:[
-        'get'=>[
-            'controller'=> NotFoundAction::class,
-            'openapi_context'=> ['summary'=>'hidden'],
-            'read'=>false,
-            'output'=>false
-        ],
+        'get',
         'delete'
     ],
     denormalizationContext:['groups'=>'write:User'],
-    
+    normalizationContext:['groups'=>'read:User']
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -46,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:User')]
     private $email;
 
     /**
@@ -70,26 +65,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:User')]
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:User')]
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:User')]
     private $adress;
 
     /**
-     * @ORM\OneToOne(targetEntity=Cart::class, inversedBy="user", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Cart::class, inversedBy="user", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups('write:User')]
+    #[Groups('write:User','read:User')]
     private $cart;
 
     public function getId(): ?int
