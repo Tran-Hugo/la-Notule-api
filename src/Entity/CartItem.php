@@ -29,7 +29,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 ]
             ]
         ]
-    ]
+                            ],
+        normalizationContext:['groups'=>['read:cartItem']]
 )]
 class CartItem
 {
@@ -38,7 +39,7 @@ class CartItem
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups('read:cart')]
+    #[Groups(['read:cart','read:cartItem'])]
     private $id;
 
     /**
@@ -48,16 +49,16 @@ class CartItem
     private $cart;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="cartItems")
+     * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="cartItems", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups('read:cart')]
+    #[Groups(['read:cart','read:cartItem'])]
     private $book;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups('read:cart')]
+    #[Groups(['read:cart','read:cartItem'])]
     private $quantity;
 
     public function getId(): ?int

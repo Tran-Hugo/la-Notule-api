@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Controller\RegistrationController;
-use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Action\NotFoundAction;
+use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -19,7 +23,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     collectionOperations:[
         'post'=>[
             'controller'=>RegistrationController::class
-        ]
+        ],
+        'me'=>[
+            'pagination_enabled'=>false,
+            'path'=>'/me',
+            'method'=>'get',
+            'controller'=> MeController::class,
+            'read'=>false,
+            'security'=>'is_granted("ROLE_USER")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ],
     ],
     itemOperations:[
         'get',
@@ -28,25 +43,27 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
     denormalizationContext:['groups'=>'write:User'],
     normalizationContext:['groups'=>'read:User']
 )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups('read:User')]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups('write:User','read:User')]
+    #[Groups(['write:User','read:User'])]
     private $email;
 
     /**
      * @ORM\Column(type="json")
      */
+    #[Groups('read:User')]
     private $roles = [];
 
     /**
@@ -65,31 +82,47 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User','read:User')]
+    #[Groups(['write:User','read:User'])]
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User','read:User')]
+    #[Groups(['write:User','read:User','read:Order'])]
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups('write:User','read:User')]
+    #[Groups(['write:User','read:User','read:Order'])]
     private $adress;
 
     /**
      * @ORM\OneToOne(targetEntity=Cart::class, inversedBy="user", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups('write:User','read:User')]
+    #[Groups(['write:User','read:User'])]
     private $cart;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Order::class, mappedBy="User", orphanRemoval=true)
+     */
+    private $orders;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -242,5 +275,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->confirmPassword = $confirmPassword;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Order[]
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders[] = $order;
+            $order->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getUser() === $this) {
+                $order->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+    public static function createFromPayload($id, array $payload){
+       
+        return (new User)->setId($id)->setEmail($payload['email'] ?? '')->setRoles($payload["roles"]);
     }
 }
