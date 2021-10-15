@@ -14,7 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     itemOperations:[
-        'get'
+        'get',
+        'patch'
     ],
     collectionOperations:[
         'get'
@@ -49,9 +50,9 @@ class Cart
     private $cartItems;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float", options={"default" : 0})
      */
-    #[Groups('read:cart')]
+    #[Groups(['read:cart','write:User'])]
     private $total;
 
     public function __construct()

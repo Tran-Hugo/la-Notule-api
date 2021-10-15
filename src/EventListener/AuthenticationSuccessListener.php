@@ -24,7 +24,7 @@ public function onAuthenticationSuccessResponse(AuthenticationSuccessEvent $even
     $data['data'] = array(
         'roles' => $user->getRoles(),
         'id'=>$user->getId(),
-        'cart'=>'/api/carts/'.$cart
+        'cart'=>$cart
     );
 
     $event->setData($data);
