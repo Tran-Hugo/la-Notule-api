@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
@@ -57,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups(['write:User','read:User'])]
+    #[Groups(['write:User','read:User']),NotBlank(),]
     private $email;
 
     /**
@@ -73,11 +74,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     #[Groups('write:User')]
     private $password;
 
-    /**
-     * 
-     */
-    #[Groups('write:User')]
-    private $confirmPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -257,25 +253,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
         return $this;
     }
 
-    /**
-     * Get the value of confirmPassword
-     */ 
-    public function getConfirmPassword()
-    {
-        return $this->confirmPassword;
-    }
-
-    /**
-     * Set the value of confirmPassword
-     *
-     * @return  self
-     */ 
-    public function setConfirmPassword($confirmPassword)
-    {
-        $this->confirmPassword = $confirmPassword;
-
-        return $this;
-    }
 
     /**
      * @return Collection|Order[]

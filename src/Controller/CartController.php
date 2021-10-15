@@ -86,4 +86,18 @@ class CartController extends AbstractController
         $this->em->flush();
         
     }
+
+    #[Route('/cartItems/delete/{id}', name:'deleteCartItem', methods:["DELETE"])]
+    public function deleteCartItem($id, CartItemRepository $cartItemRepo)
+    {
+        $cartItem = $cartItemRepo->find($id);
+        $cart = $cartItem->getCart();
+        $cart->setTotal($cart->getTotal()-$cartItem->getBook()->getPrice()*$cartItem->getQuantity());
+        
+        $this->em->persist($cart);
+        $this->em->remove($cartItem);
+        $this->em->flush();
+
+        return $this->json($cart,200);
+    }
 }

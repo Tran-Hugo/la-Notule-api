@@ -13,9 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class PaymentController extends AbstractController
 {   
     #[Route('/payment/{id}', name:'payment', methods:['POST','GET'])]
-    public function payment($id,CartManager $cartManager, Cart $cart, UserRepository $repo)
+    public function payment(CartManager $cartManager, Cart $cart)
     {
-        $user = $repo->find($id);
+        $user = $cart->getUser();
         $intentSecret = $cartManager->intentSecret($cart);
         $data = [
             'user'=>$user,
