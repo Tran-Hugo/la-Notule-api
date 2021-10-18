@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Controller\PostItemController;
 use App\Repository\CartItemRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -15,18 +14,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations:[
         'get',
         'post'=>[
-            // 'controller'=>PostItemController::class,
             'openapi_context'=>[
                 'summary'=>'Permet d\'ajouter un livre au panier',
-                'requestBody'=>[
-                    'content'=>[
-                        'application/json'=>[
-                            'schema'=>[
-                                '$ref' => '#/components/schemas/cartItem'
-                            ]
-                        ]
-                    ]
-                ]
             ]
         ]
                             ],

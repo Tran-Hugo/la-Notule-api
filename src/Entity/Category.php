@@ -12,7 +12,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-#[ApiResource]
+#[ApiResource(
+    normalizationContext:['groups'=>['read:category']]
+)]
 class Category
 {
     /**
@@ -25,12 +27,13 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:category'])]
     private $name;
 
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="category")
      */
+    #[Groups(['read:category'])]
     private $books;
 
     public function __construct()

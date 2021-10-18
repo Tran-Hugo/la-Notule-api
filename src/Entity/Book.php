@@ -44,7 +44,7 @@ class Book
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:cart','read:collection'])]
+    #[Groups(['write:book','read:cart','read:collection','read:category'])]
     private $title;
 
     /**

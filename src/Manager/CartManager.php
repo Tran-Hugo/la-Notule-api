@@ -62,12 +62,14 @@ class CartManager
         foreach($products as $product){
             $ref = ['title'=>$product->getBook()->getTitle(),'price'=>$product->getBook()->getPrice(),'quantity'=>$product->getQuantity()];
             array_push($prodArray,$ref);
+            $product->getBook()->setQuantity($product->getBook()->getQuantity()-$product->getQuantity());
+            $this->em->remove($product);
         }
-        
         
         $order->setUser($user);
         $order->setProducts($prodArray);
         $order->setPrice($cart->getTotal());
+        $cart->setTotal(0);
         $this->em->persist($order);
         $this->em->flush();
 
