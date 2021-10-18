@@ -2,18 +2,29 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\BookRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\BookRepository;
+use App\Controller\AddBookController;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
  */
 #[ApiResource(
-    denormalizationContext:['groups'=>['write:book']]
+    denormalizationContext:['groups'=>['write:book']],
+    collectionOperations:[
+        'get',
+        'post',
+        'addBook'=>[
+            'method'=>'POST',
+            'path'=>'/books/new',
+            'controller'=>AddBookController::class,
+            'deserialize'=>false,
+        ]
+    ]
 )]
 class Book
 {
