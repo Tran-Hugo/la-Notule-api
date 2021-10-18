@@ -7,13 +7,18 @@ use App\Repository\BookRepository;
 use App\Controller\AddBookController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\HttpFoundation\File\File;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 /**
  * @ORM\Entity(repositoryClass=BookRepository::class)
+ * @Vich\Uploadable()
  */
 #[ApiResource(
+    normalizationContext:['groups'=>['read:collection']],
     denormalizationContext:['groups'=>['write:book']],
     collectionOperations:[
         'get',
@@ -23,6 +28,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             'path'=>'/books/new',
             'controller'=>AddBookController::class,
             'deserialize'=>false,
+            'security'=>'is_granted("ROLE_ADMIN")'
         ]
     ]
 )]
@@ -38,37 +44,37 @@ class Book
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:cart'])]
+    #[Groups(['write:book','read:cart','read:collection'])]
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:collection'])]
     private $author;
 
     /**
      * @ORM\Column(type="text")
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:collection'])]
     private $description;
 
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:collection'])]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:collection'])]
     private $quantity;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books", cascade={"persist"})
      */
-    #[Groups(['write:book'])]
+    #[Groups(['write:book','read:collection'])]
     private $category;
 
 
@@ -76,6 +82,23 @@ class Book
      * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="book", orphanRemoval=true)
      */
     private $cartItems;
+
+    /**
+     * @var File|null
+     * @Vich\UploadableField(mapping="post_image", fileNameProperty="filePath")
+     */
+    private $file;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $filePath;
+    
+    /**
+     * @var string|null
+     */
+    #[Groups('read:collection')]
+    private $fileUrl;
 
     public function __construct()
     {
@@ -200,6 +223,62 @@ class Book
                 $cartItem->setBook(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFilePath(): ?string
+    {
+        return $this->filePath;
+    }
+
+    public function setFilePath(?string $filePath): self
+    {
+        $this->filePath = $filePath;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of file
+     *
+     * @return  File|null
+     */ 
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * Set the value of file
+     *
+     * @param  File|null  $file
+     *
+     * @return  self
+     */ 
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of fileUrl
+     */ 
+    public function getFileUrl()
+    {
+        return $this->fileUrl;
+    }
+
+    /**
+     * Set the value of fileUrl
+     *
+     * @return  self
+     */ 
+    public function setFileUrl($fileUrl)
+    {
+        $this->fileUrl = $fileUrl;
 
         return $this;
     }
