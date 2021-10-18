@@ -38,8 +38,9 @@ class CartController extends AbstractController
         $this->em->flush();
         } else {
             $cartItem=$cartItemExist[0];
-            $cart->setTotal($cartItem->getBook()->getPrice()*$cartItem->getQuantity()+$cart->getTotal());
+            $cart->setTotal($cartItem->getBook()->getPrice()*$quantity+$cart->getTotal());
             $cartItem->setQuantity($cartItem->getQuantity()+$quantity);
+            // dd($cartItem->getQuantity());
             $this->em->persist($cartItem);
             $this->em->flush();
         }
@@ -84,7 +85,7 @@ class CartController extends AbstractController
         $this->em->persist($cart);
         $this->em->persist($cartItem);
         $this->em->flush();
-        
+        return $this->json($cartItem);
     }
 
     #[Route('/cartItems/delete/{id}', name:'deleteCartItem', methods:["DELETE"])]

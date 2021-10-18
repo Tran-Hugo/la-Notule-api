@@ -103,6 +103,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @ORM\OneToMany(targetEntity=Order::class, mappedBy="User", orphanRemoval=true)
      */
+    #[Groups(['read:User'])]
     private $orders;
 
     public function __construct()
