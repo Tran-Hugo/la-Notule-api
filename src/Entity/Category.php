@@ -22,6 +22,7 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:category'])]
     private $id;
 
     /**

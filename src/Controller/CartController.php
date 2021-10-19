@@ -28,7 +28,8 @@ class CartController extends AbstractController
         $quantity = json_decode($request->getContent(),true)['quantity'];
         $cartItemExist = $cartItemRepo->findBy(["book"=>$book,"cart"=>$cart]);
         
-        if (count($cartItemExist)==0){
+        if($book->getQuantity()>=$quantity) {
+            if (count($cartItemExist)==0){
         $cartItem = new CartItem();
         $cartItem->setBook($book);
         $cartItem->setCart($cart);
@@ -38,17 +39,24 @@ class CartController extends AbstractController
         $this->em->flush();
         } else {
             $cartItem=$cartItemExist[0];
-            $cart->setTotal($cartItem->getBook()->getPrice()*$quantity+$cart->getTotal());
+            if($book->getQuantity()>=$cartItem->getQuantity()+$quantity){
+              $cart->setTotal($cartItem->getBook()->getPrice()*$quantity+$cart->getTotal());
             $cartItem->setQuantity($cartItem->getQuantity()+$quantity);
             // dd($cartItem->getQuantity());
             $this->em->persist($cartItem);
-            $this->em->flush();
+            $this->em->flush();  
+            } else {
+            return $this->json(['error'=>'pas assez de stock']);
+            }
         }
-
         $this->em->persist($cart);
         $this->em->flush();
 
         return $this->json($cartItem,201);
+        } else {
+            return $this->json(['error'=>'pas assez de stock']);
+        }
+             
     }
 
     #[Route('/cartItems/minus', name:"minusCartItem", methods:["POST"])]
@@ -80,12 +88,18 @@ class CartController extends AbstractController
         $cartItem = $cartItemRepo->find(json_decode($request->getContent(),true)['cartItemId']);
         $cart = $cartItem->getCart();
 
-        $cartItem->setQuantity($cartItem->getQuantity()+1);
-        $cart->setTotal($cart->getTotal()+$cartItem->getBook()->getPrice());
-        $this->em->persist($cart);
-        $this->em->persist($cartItem);
-        $this->em->flush();
-        return $this->json($cartItem);
+        if($cartItem->getBook()->getQuantity()>$cartItem->getQuantity()){
+            $cartItem->setQuantity($cartItem->getQuantity()+1);
+            $cart->setTotal($cart->getTotal()+$cartItem->getBook()->getPrice());
+            $this->em->persist($cart);
+            $this->em->persist($cartItem);
+            $this->em->flush();
+            return $this->json($cartItem,201);
+        } else {
+            return $this->json(['res'=>'nop'],200);
+        }
+
+        
     }
 
     #[Route('/cartItems/delete/{id}', name:'deleteCartItem', methods:["DELETE"])]
