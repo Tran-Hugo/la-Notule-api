@@ -22,13 +22,13 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:category'])]
+    #[Groups(['read:category','read:collection'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:category'])]
+    #[Groups(['write:book','read:category','read:collection'])]
     private $name;
 
     /**

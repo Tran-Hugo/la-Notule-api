@@ -30,6 +30,18 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'deserialize'=>false,
             'security'=>'is_granted("ROLE_ADMIN")'
         ]
+        ],
+    itemOperations:[
+        'get',
+        'put'=>[
+            'security'=>'is_granted("ROLE_ADMIN")'
+        ],
+        'delete'=>[
+            'security'=>'is_granted("ROLE_ADMIN")'
+        ],
+        'patch'=>[
+            'security'=>'is_granted("ROLE_ADMIN")'
+        ]
     ]
 )]
 class Book
