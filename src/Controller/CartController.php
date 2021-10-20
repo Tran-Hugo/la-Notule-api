@@ -53,8 +53,35 @@ class CartController extends AbstractController
         $this->em->flush();
 
         return $this->json($cartItem,201);
-        } else {
-            return $this->json(['error'=>'pas assez de stock']);
+        } else { //si la quantité demandé est > au stock on ajoute la quantité du stock
+            $quantity = $book->getQuantity();
+
+            if (count($cartItemExist)==0){
+                $cartItem = new CartItem();
+                $cartItem->setBook($book);
+                $cartItem->setCart($cart);
+                $cartItem->setQuantity($quantity);
+                $cart->setTotal($cartItem->getBook()->getPrice()*$cartItem->getQuantity()+$cart->getTotal());
+                $this->em->persist($cartItem);
+                $this->em->flush();
+                } else {
+                    $cartItem=$cartItemExist[0];
+                    if($book->getQuantity()>=$cartItem->getQuantity()+$quantity){
+                      $cart->setTotal($cartItem->getBook()->getPrice()*$quantity+$cart->getTotal());
+                    $cartItem->setQuantity($cartItem->getQuantity()+$quantity);
+                    // dd($cartItem->getQuantity());
+                    $this->em->persist($cartItem);
+                    $this->em->flush();  
+                    } else {
+                    return $this->json(['error'=>'pas assez de stock']);
+                    }
+                }
+                $this->em->persist($cart);
+                $this->em->flush();
+        
+                return $this->json($cartItem,201);
+
+            // return $this->json(['error'=>'pas assez de stock']);
         }
              
     }

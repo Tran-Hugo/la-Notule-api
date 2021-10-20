@@ -39,6 +39,7 @@ class Book
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:collection'])]
     private $id;
 
     /**

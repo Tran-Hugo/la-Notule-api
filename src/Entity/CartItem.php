@@ -35,6 +35,7 @@ class CartItem
      * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="cartItems")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['read:cartItem'])]
     private $cart;
 
     /**
