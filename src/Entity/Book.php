@@ -117,6 +117,11 @@ class Book
     #[Groups('read:collection')]
     private $fileUrl;
 
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $updatedAt;
+
     public function __construct()
     {
         $this->category = new ArrayCollection();
@@ -296,6 +301,18 @@ class Book
     public function setFileUrl($fileUrl)
     {
         $this->fileUrl = $fileUrl;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
         return $this;
     }

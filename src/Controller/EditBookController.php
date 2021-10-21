@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\BookRepository;
 use App\Repository\CategoryRepository;
+use DateTimeImmutable;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,14 +20,10 @@ class EditBookController extends AbstractController
         $price = $request->request->get('price');
         $quantity = $request->request->get('quantity');
         $categories = $request->request->get('categories');
+        // $supprImg = $request->request->get('supprImg');
+        // throw new Exception($supprImg);
 
         $previousCat = $book->getCategory()->getSnapshot();
-        $previousCategories = [];
-        foreach($previousCat as $cat){
-            array_push($previousCategories,$cat->getId());
-        };
-        $oldCat = $repo->findBy(['id'=>$previousCategories]);
-        
         $newCat= $repo->findBy(['id'=>str_split($categories)]);
         // dd($newCat,$oldCat);
         
@@ -36,13 +33,23 @@ class EditBookController extends AbstractController
         $book->setDescription($description);
         $book->setPrice($price);
         $book->setQuantity($quantity);
-        foreach($oldCat as $cat){
+        foreach($previousCat as $cat){
             $book->removeCategory($cat);
         }
         foreach($newCat as $cat){
            $book->addCategory($cat); 
         }
+        
         $book->setFile($file);
+        // if($supprImg == false){
+        // } else {
+        //     $book->setFilePath(null);
+        //     $book->setFile(null);
+        // }
+        
+        
+        $book->setUpdatedAt(new DateTimeImmutable());
+        
 
 
         return $book;
