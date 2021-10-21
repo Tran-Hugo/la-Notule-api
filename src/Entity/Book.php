@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use App\Controller\AddBookController;
+use App\Controller\EditBookController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\File\File;
@@ -22,7 +23,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     denormalizationContext:['groups'=>['write:book']],
     collectionOperations:[
         'get',
-        'post',
         'addBook'=>[
             'method'=>'POST',
             'path'=>'/books/new',
@@ -33,15 +33,19 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
         ],
     itemOperations:[
         'get',
-        'put'=>[
+        'editBook'=>[
+            'method'=>'POST',
+            'path'=>'/books/edit/{id}',
+            'controller'=>EditBookController::class,
+            'deserialize'=>false,
+            'openapi_context'=>[
+                'summary'=>'Permet d\'éditer un livre',
+            ],
             'security'=>'is_granted("ROLE_ADMIN")'
         ],
         'delete'=>[
             'security'=>'is_granted("ROLE_ADMIN")'
         ],
-        'patch'=>[
-            'security'=>'is_granted("ROLE_ADMIN")'
-        ]
     ]
 )]
 class Book
