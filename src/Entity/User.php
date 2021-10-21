@@ -51,14 +51,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups('read:User')]
+    #[Groups(['read:User','read:Order'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups(['write:User','read:User']),NotBlank(),]
+    #[Groups(['write:User','read:User','read:Order']),NotBlank(),]
     private $email;
 
     /**
@@ -78,7 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User'])]
+    #[Groups(['write:User','read:User','read:Order'])]
     private $firstname;
 
     /**

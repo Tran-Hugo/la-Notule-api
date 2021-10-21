@@ -12,7 +12,22 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="`order`")
  */
 #[ApiResource(
-    normalizationContext:['groups'=>['read:Order']]
+    normalizationContext:['groups'=>['read:Order']],
+    itemOperations:[
+        'get',
+        'delete'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
+    ],
+    ],
+    collectionOperations:[
+        'get'=>[
+            "order" => ["id" => "DESC"]
+        ]
+    ]
 )]
 class Order
 {
@@ -21,6 +36,7 @@ class Order
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['read:Order'])]
     private $id;
 
     /**

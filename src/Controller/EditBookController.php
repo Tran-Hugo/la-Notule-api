@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Filesystem\Filesystem;
 
 class EditBookController extends AbstractController
 {
@@ -20,8 +21,9 @@ class EditBookController extends AbstractController
         $price = $request->request->get('price');
         $quantity = $request->request->get('quantity');
         $categories = $request->request->get('categories');
-        // $supprImg = $request->request->get('supprImg');
+        $supprImg = $request->request->get('supprImg');
         // throw new Exception($supprImg);
+        // dd($categories);
 
         $previousCat = $book->getCategory()->getSnapshot();
         $newCat= $repo->findBy(['id'=>str_split($categories)]);
@@ -40,12 +42,15 @@ class EditBookController extends AbstractController
            $book->addCategory($cat); 
         }
         
-        $book->setFile($file);
-        // if($supprImg == false){
-        // } else {
-        //     $book->setFilePath(null);
-        //     $book->setFile(null);
-        // }
+        if($supprImg == "false"){
+            $book->setFile($file);
+        } else {
+            $fileSystem = new Filesystem;
+            $fileSystem->remove($this->getParameter('public')."/images/books/".$book->getFilePath());
+            
+            $book->setFilePath(null);
+            $book->setFile(null);
+        }
         
         
         $book->setUpdatedAt(new DateTimeImmutable());

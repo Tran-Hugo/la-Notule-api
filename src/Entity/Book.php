@@ -28,7 +28,10 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'path'=>'/books/new',
             'controller'=>AddBookController::class,
             'deserialize'=>false,
-            'security'=>'is_granted("ROLE_ADMIN")'
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
         ]
         ],
     itemOperations:[
@@ -40,11 +43,15 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
             'deserialize'=>false,
             'openapi_context'=>[
                 'summary'=>'Permet d\'éditer un livre',
+                'security' => [['bearerAuth'=>[]]]
             ],
             'security'=>'is_granted("ROLE_ADMIN")'
         ],
         'delete'=>[
-            'security'=>'is_granted("ROLE_ADMIN")'
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
         ],
     ]
 )]

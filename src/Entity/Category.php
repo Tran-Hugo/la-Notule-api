@@ -13,7 +13,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
 #[ApiResource(
-    normalizationContext:['groups'=>['read:category']]
+    normalizationContext:['groups'=>['read:category']],
+    collectionOperations:[
+        'get',
+        'post'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
+    ],
+    ],
+    itemOperations:[
+        'get',
+        'put'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ],
+        'delete'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ],
+        'patch'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ]
+    ]
 )]
 class Category
 {
