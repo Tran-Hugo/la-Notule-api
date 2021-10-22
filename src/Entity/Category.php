@@ -13,9 +13,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
 #[ApiResource(
-    normalizationContext:['groups'=>['read:category']],
+    // normalizationContext:['groups'=>['read:category']],
     collectionOperations:[
-        'get',
+        'get'=>['normalization_context' => ['groups' => 'read:category']],
         'post'=>[
             'security'=>'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
@@ -25,7 +25,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
     ],
     ],
     itemOperations:[
-        'get',
+        'get'=>['normalization_context' => ['groups' => 'read:category']],
         'put'=>[
             'security'=>'is_granted("ROLE_ADMIN")',
             'openapi_context' => [

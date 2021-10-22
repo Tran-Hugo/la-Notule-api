@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\OrderRepository;
+use App\Controller\GetByUserController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -14,7 +15,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     normalizationContext:['groups'=>['read:Order']],
     itemOperations:[
-        'get',
         'delete'=>[
             'security'=>'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
@@ -22,7 +22,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ],
     ],
-    ],
+        'getByUser'=>[
+            'method'=>'get',
+            'path'=>'/user/orders/{id}',
+            'controller'=>GetByUserController::class,
+            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+            'openapi_context' => [
+                'summary'=>'Permet de récuperer une commande en vérifiant l\'identité de la personne',
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
+        ]
+        ],
     collectionOperations:[
         'get'=>[
             "order" => ["id" => "DESC"]
