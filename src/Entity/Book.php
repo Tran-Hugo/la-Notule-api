@@ -64,7 +64,7 @@ class Book
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:collection'])]
+    #[Groups(['read:collection','read:category'])]
     private $id;
 
     /**
@@ -76,25 +76,25 @@ class Book
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:collection'])]
+    #[Groups(['write:book','read:collection','read:category'])]
     private $author;
 
     /**
      * @ORM\Column(type="text")
      */
-    #[Groups(['write:book','read:collection'])]
+    #[Groups(['write:book','read:collection','read:category'])]
     private $description;
 
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups(['write:book','read:collection'])]
+    #[Groups(['write:book','read:collection','read:category'])]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups(['write:book','read:collection'])]
+    #[Groups(['write:book','read:collection','read:category'])]
     private $quantity;
 
     /**
@@ -123,7 +123,7 @@ class Book
     /**
      * @var string|null
      */
-    #[Groups('read:collection')]
+    #[Groups(['read:collection','read:category'])]
     private $fileUrl;
 
     /**
