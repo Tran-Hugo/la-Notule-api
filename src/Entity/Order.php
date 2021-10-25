@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\OrderRepository;
+use App\Controller\GetOrderListByUser;
 use App\Controller\GetByUserController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -37,7 +38,18 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations:[
         'get'=>[
             "order" => ["id" => "DESC"]
-        ]
+        ],
+        'getListByUser'=>[
+            'method'=>'GET',
+            'path'=>'/user/orders',
+            'controller'=>GetOrderListByUser::class,
+            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+            'openapi_context' => [
+                'summary'=>'Permet de récuperer les commandes d\'un utilisateur',
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
+        ],
     ]
 )]
 class Order

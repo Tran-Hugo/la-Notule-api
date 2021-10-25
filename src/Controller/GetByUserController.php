@@ -21,7 +21,7 @@ class GetByUserController extends AbstractController
         $order = $request->get('data');
         $orderOwnerId = $order->getUser()->getId();
 
-        // dd($userId, $orderOwnerId,$role);
+        // On vérifie l'id de l'utilisateur grace à token reçu puis on le compare avec l'id du propriétaire de la commande
         
         if(($userId === $orderOwnerId) || $role === "ROLE_ADMIN"){
             return $order;

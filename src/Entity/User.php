@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\GetUserByUser;
 use App\Repository\UserRepository;
 use App\Controller\RegistrationController;
 use ApiPlatform\Core\Action\NotFoundAction;
@@ -38,7 +39,16 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         ],
     ],
     itemOperations:[
-        'get',
+        'getUserByUser'=>[
+            'path'=>'/users/{id}',
+            'method'=>'GET',
+            'controller'=>GetUserByUser::class,
+            'security'=>'is_granted("ROLE_USER")',
+            'normalization_context' => ['groups' => 'read:UserItem'],
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ],
         'delete'
     ],
     denormalizationContext:['groups'=>'write:User'],
@@ -51,14 +61,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:User','read:Order'])]
+    #[Groups(['read:User','read:Order','read:UserItem'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups(['write:User','read:User','read:Order']),NotBlank(),]
+    #[Groups(['write:User','read:User','read:Order','read:UserItem']),NotBlank(),]
     private $email;
 
     /**
@@ -78,19 +88,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order'])]
+    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order'])]
+    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order'])]
+    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
     private $adress;
 
     /**

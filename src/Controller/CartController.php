@@ -4,10 +4,11 @@ namespace App\Controller;
 
 use App\Entity\CartItem;
 use App\Repository\BookRepository;
-use App\Repository\CartItemRepository;
 use App\Repository\CartRepository;
+use App\Repository\CartItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -101,6 +102,7 @@ class CartController extends AbstractController
             $cart->setTotal($cart->getTotal()-$cartItem->getBook()->getPrice());
             $this->em->remove($cartItem);
             $this->em->flush();
+            return new Response('cartItem removed',204);
         }
 
         $this->em->persist($cart);
