@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CartRepository;
+use App\Controller\GetCartController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -14,7 +15,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     itemOperations:[
-        'get',
+        'get'=>[
+            'controller'=>GetCartController::class,
+            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+            'openapi_context' => [
+                'summary'=>'Permet d\'avoir accès au panier d\'un utilisateur',
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
+        ],
         'patch'
     ],
     collectionOperations:[
