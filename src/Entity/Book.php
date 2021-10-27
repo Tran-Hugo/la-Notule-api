@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\BookRepository;
 use App\Controller\AddBookController;
 use App\Controller\EditBookController;
-use App\Controller\SearchBookController;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\HttpFoundation\File\File;
@@ -123,7 +122,7 @@ class Book
     /**
      * @var string|null
      */
-    #[Groups(['read:collection','read:category'])]
+    #[Groups(['read:collection','read:category','read:cart'])]
     private $fileUrl;
 
     /**

@@ -64,6 +64,7 @@ class Category
 
     /**
      * @ORM\ManyToMany(targetEntity=Book::class, mappedBy="category")
+     * @ORM\OrderBy({"id" = "DESC"})
      */
     #[Groups(['read:category'])]
     private $books;
