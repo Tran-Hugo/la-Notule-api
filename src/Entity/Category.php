@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
+use App\Controller\GetCategoriesLimited;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,6 +17,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
     // normalizationContext:['groups'=>['read:category']],
     collectionOperations:[
         'get'=>['normalization_context' => ['groups' => 'read:category']],
+        'getLimited'=>[
+            'normalization_context' => ['groups' => 'read:category'],
+            'path'=>'/categoriesLimited',
+            'method'=>'get',
+            'controller'=>GetCategoriesLimited::class
+        ],
+        'getCatName'=>[
+            'path'=>'/categoriesNames',
+            'method'=>'get',
+            'normalization_context' => ['groups' => 'get:categoriesName']
+        ],
         'post'=>[
             'security'=>'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
@@ -53,13 +65,13 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:category','read:collection'])]
+    #[Groups(['read:category','read:collection','get:categoriesName'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:category','read:collection'])]
+    #[Groups(['write:book','read:category','read:collection','get:categoriesName'])]
     private $name;
 
     /**

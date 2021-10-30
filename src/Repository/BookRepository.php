@@ -57,4 +57,13 @@ class BookRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getBookByCat($cat){
+        return $this->createQueryBuilder('b')
+        ->where(':category MEMBER OF b.category')
+        ->setParameter('category', $cat )
+        ->orderBy('b.id', 'DESC')
+        ->getQuery()
+        ->getResult();
+    }
 }
