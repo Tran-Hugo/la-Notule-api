@@ -63,7 +63,7 @@ class Book
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:collection','read:category'])]
+    #[Groups(['read:collection','read:category','read:cart'])]
     private $id;
 
     /**
