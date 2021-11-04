@@ -22,7 +22,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
     normalizationContext:['groups'=>['read:collection']],
     denormalizationContext:['groups'=>['write:book']],
     collectionOperations:[
-        'get',
+        'get'=>["pagination_enabled" => false,],
         'addBook'=>[
             'method'=>'POST',
             'path'=>'/books/new',

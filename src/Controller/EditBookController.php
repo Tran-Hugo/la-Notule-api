@@ -26,7 +26,6 @@ class EditBookController extends AbstractController
         // dd($categories);
 
         $previousCat = $book->getCategory()->getSnapshot();
-        $newCat= $repo->findBy(['id'=>str_split($categories)]);
         // dd($newCat,$oldCat);
         
         $file = $request->files->get('file');
@@ -38,7 +37,8 @@ class EditBookController extends AbstractController
         foreach($previousCat as $cat){
             $book->removeCategory($cat);
         }
-        foreach($newCat as $cat){
+        foreach($categories as $cat){
+            $cat = $repo->findOneBy(["id"=>$cat]);
            $book->addCategory($cat); 
         }
         

@@ -18,7 +18,10 @@ class AddBookController extends AbstractController
         $price = $request->request->get('price');
         $quantity = $request->request->get('quantity');
         $categories = $request->request->get('categories');
-        $cat= $repo->findBy(['id'=>str_split($categories)]);
+        foreach ($categories as  $category) {
+            $category = $repo->findOneBy(['id'=> $category]);
+            $book->addCategory($category);
+        }
         
         $file = $request->files->get('file');
         $book->setTitle($title);
@@ -26,9 +29,6 @@ class AddBookController extends AbstractController
         $book->setDescription($description);
         $book->setPrice($price);
         $book->setQuantity($quantity);
-        foreach($cat as $ca){
-           $book->addCategory($ca); 
-        }
         $book->setFile($file);
 
 
