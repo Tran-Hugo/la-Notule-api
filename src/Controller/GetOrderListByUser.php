@@ -14,7 +14,7 @@ class GetOrderListByUser extends AbstractController
     public function __invoke(OrderRepository $repo)
     {
         $user = $this->security->getUser();
-        $data = $repo->findBy(['User'=>$user]);
+        $data = $repo->findBy(['User'=>$user],['id'=>'DESC']);
         
         return $data;
     }
