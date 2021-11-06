@@ -49,7 +49,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
                 'security' => [['bearerAuth'=>[]]]
             ]
         ],
-        'delete'
+        'delete'=>[
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth'=>[]]]
+            ]
+        ]
     ],
     denormalizationContext:['groups'=>'write:User'],
     normalizationContext:['groups'=>'read:User']
