@@ -90,7 +90,7 @@ class Book
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups(['write:book','read:collection','read:category'])]
+    #[Groups(['write:book','read:collection','read:category','read:cart'])]
     private $price;
 
     /**
