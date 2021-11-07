@@ -17,7 +17,13 @@ class RegistrationController extends AbstractController
     public function __invoke(Request $request)
     {
         $user = $request->get('data');
-        $user->setPassword($this->hasher->hashPassword($user,$user->getPassword()));
+        if(strlen($user->getPassword())>0){
+            $user->setPassword($this->hasher->hashPassword($user,$user->getPassword()));
+            $data = $user;
+            return $data;
+        } else {
+            throw new Exception('not blank');
+        }
         // $password = $user->getPassword();
         // $confirmPassword = $user->getConfirmPassword();
         // if ($password == $confirmPassword) {
@@ -27,9 +33,5 @@ class RegistrationController extends AbstractController
         //     // $user->setConfirmPassword($confirmPassword);
         //     throw new Exception('les mots de passes ne correspondent pas');
         // }
-        
-        $data = $user;
-        return $data;
-        
     }
 }
