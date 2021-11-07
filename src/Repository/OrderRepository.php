@@ -47,4 +47,14 @@ class OrderRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function searchedOrders($search){
+        return $this->createQueryBuilder('o')
+            ->join('o.User',"u")
+            ->where('o.id LIKE :s')
+            ->orWhere('u.email LIKE :s')
+            ->orWhere('o.products LIKE :s')
+            ->setParameter('s','%'.$search.'%')
+            ->getQuery()
+            ->getResult();
+    }
 }

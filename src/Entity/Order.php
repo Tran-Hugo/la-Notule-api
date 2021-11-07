@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\OrderRepository;
 use App\Controller\GetOrderListByUser;
 use App\Controller\GetByUserController;
+use App\Controller\SearchOrderController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -50,6 +51,17 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ],
         ],
+        'searchOrder'=>[
+            'method'=>'POST',
+            'path'=>'/search/order',
+            'controller'=>SearchOrderController::class,
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'summary'=>'Permet de chercher les commandes par id email ou produits',
+                'security' => [['bearerAuth'=>[]],
+                ]
+            ],
+        ]
     ]
 )]
 class Order
