@@ -5,6 +5,7 @@ namespace App\Manager;
 use App\Entity\Cart;
 use App\Entity\Order;
 use App\Entity\User;
+use App\Serializer\PostNormalizer;
 use App\Services\StripeService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,7 +25,7 @@ class CartManager
      * @param EntityManagerInterface $entityManager
      * @param StripeService $stripeService
      */
-    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService)
+    public function __construct(EntityManagerInterface $entityManager, StripeService $stripeService,private PostNormalizer $normalizer)
     {
         $this->em = $entityManager;
         $this->stripeService = $stripeService;
@@ -60,7 +61,8 @@ class CartManager
         $order = new Order();
         $prodArray=[];
         foreach($products as $product){
-            $ref = ['title'=>$product->getBook()->getTitle(),'price'=>$product->getBook()->getPrice(),'quantity'=>$product->getQuantity()];
+            $productNormalized = $this->normalizer->normalize($product->getBook());
+            $ref = ['title'=>$product->getBook()->getTitle(),'price'=>$product->getBook()->getPrice(),'quantity'=>$product->getQuantity(),'fileUrl'=>$productNormalized['fileUrl']];
             array_push($prodArray,$ref);
             $product->getBook()->setQuantity($product->getBook()->getQuantity()-$product->getQuantity());
             $this->em->remove($product);
