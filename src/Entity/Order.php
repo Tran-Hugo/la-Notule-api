@@ -38,7 +38,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
         ],
     collectionOperations:[
         'get'=>[
-            "order" => ["id" => "DESC"]
+            "order" => ["id" => "DESC"],
+            "pagination_enabled" => false,
         ],
         'getListByUser'=>[
             'method'=>'GET',
