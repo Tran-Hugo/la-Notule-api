@@ -24,14 +24,5 @@ class RegistrationController extends AbstractController
         } else {
             throw new Exception('not blank');
         }
-        // $password = $user->getPassword();
-        // $confirmPassword = $user->getConfirmPassword();
-        // if ($password == $confirmPassword) {
-            // $user->setConfirmPassword($user->getPassword());
-        // } else {
-        //     // $user->setPassword($this->hasher->hashPassword($user,$user->getPassword()));
-        //     // $user->setConfirmPassword($confirmPassword);
-        //     throw new Exception('les mots de passes ne correspondent pas');
-        // }
     }
 }
