@@ -11,7 +11,7 @@ class GetCategoriesLimited extends AbstractController
     {
         $categories = $repo->findAll();
         $cat =array();
-        $limit=6; //cette variable permet de limiter les résultat par catégorie dans la page d'accueil
+        $limit=6; //cette variable permet de limiter les résultats par catégorie dans la page d'accueil
         foreach ($categories as $category) {
             $cat[]=array(
                 'id'=>$category->getId(),
