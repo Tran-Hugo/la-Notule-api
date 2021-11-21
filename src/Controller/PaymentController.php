@@ -54,7 +54,6 @@ class PaymentController extends AbstractController
         if($request->getMethod()==="POST") {
             $resource = $cartManager->stripe(json_decode($request->getContent(), true), $cart);
             if($resource !== null){
-                // $cartManager->create_subscription($cart,$user);
                 $cartManager->create_subscription($cart,$user,$products);
                 return $this->json($data,201);
             }
