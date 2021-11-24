@@ -39,6 +39,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
     collectionOperations:[
         'get'=>[
             "order" => ["id" => "DESC"],
+            'security'=>'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'summary'=>'Permet de récuperer une commande en vérifiant l\'identité de la personne',
+                'security' => [['bearerAuth'=>[]],
+            ]
+        ],
             "pagination_enabled" => false,
         ],
         'getListByUser'=>[

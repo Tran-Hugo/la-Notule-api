@@ -24,10 +24,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ],
         ],
-        'patch'
+        
     ],
     collectionOperations:[
-        'get'
+        
     ],
     normalizationContext:['groups'=>['read:cart']]
 )]
