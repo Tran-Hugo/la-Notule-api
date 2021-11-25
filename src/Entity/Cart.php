@@ -24,7 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ],
         ],
-        
+        'patch'
     ],
     collectionOperations:[
         
