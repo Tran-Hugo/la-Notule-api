@@ -19,7 +19,7 @@ class GetCartController extends AbstractController
         if($userId == $id){
             $cart = $repo->find($id);
             $cartItems = $cart->getCartItems();
-            $total = 0;
+            $total = 0; // Ici on vérifie le total du panier en prenant en compte tout éventuel changement de prix puis on l'envoie en base de données
             foreach($cartItems as $cartitem){
                $total += $cartitem->getBook()->getPrice()*$cartitem->getQuantity();
             };
