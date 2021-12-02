@@ -48,22 +48,24 @@ class BookRepository extends ServiceEntityRepository
     }
     */
 
-    public function searchedBook($search){
+    public function searchedBook($search)
+    {
         return $this->createQueryBuilder('b')
             ->where('b.title LIKE :s')
             ->orWhere('b.author LIKE :s')
             ->orWhere('b.description LIKE :s')
-            ->setParameter('s','%'.$search.'%')
+            ->setParameter('s', '%' . $search . '%')
             ->getQuery()
             ->getResult();
     }
 
-    public function getBookByCat($cat){
+    public function getBookByCat($cat)
+    {
         return $this->createQueryBuilder('b')
-        ->where(':category MEMBER OF b.category')
-        ->setParameter('category', $cat )
-        ->orderBy('b.id', 'DESC')
-        ->getQuery()
-        ->getResult();
+            ->where(':category MEMBER OF b.category')
+            ->setParameter('category', $cat)
+            ->orderBy('b.id', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

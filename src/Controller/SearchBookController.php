@@ -9,12 +9,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SearchBookController extends AbstractController
 {
-    #[Route('/api/books/search', name:'searchBook',methods:["POST"])]
+    #[Route('/api/books/search', name: 'searchBook', methods: ["POST"])]
     public function __invoke(Request $request, BookRepository $repo)
     {
-        $search = json_decode($request->getContent(),true)['search'];
+        $search = json_decode($request->getContent(), true)['search'];
         $books = $repo->searchedBook($search);
-        
-        return $this->json($books,200);
+
+        return $this->json($books, 200);
     }
 }

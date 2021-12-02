@@ -12,7 +12,6 @@ class GetByUserController extends AbstractController
 {
     public function __construct(private Security $security)
     {
-        
     }
     public function __invoke(Request $request)
     {
@@ -22,13 +21,13 @@ class GetByUserController extends AbstractController
         $orderOwnerId = $order->getUser()->getId();
 
         // On vérifie l'id de l'utilisateur grace à token reçu puis on le compare avec l'id du propriétaire de la commande
-        
-        if(($userId === $orderOwnerId) || $role === "ROLE_ADMIN"){
+
+        if (($userId === $orderOwnerId) || $role === "ROLE_ADMIN") {
             return $order;
         } else {
             $response = new Response();
             $response->setContent(json_encode([
-                'message'=>'Ceci n\'est pas votre commande'
+                'message' => 'Ceci n\'est pas votre commande'
             ]));
             $response->setStatusCode(403);
             return $response;

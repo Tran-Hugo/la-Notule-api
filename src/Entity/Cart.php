@@ -14,22 +14,21 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=CartRepository::class)
  */
 #[ApiResource(
-    itemOperations:[
-        'get'=>[
-            'controller'=>GetCartController::class,
-            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+    itemOperations: [
+        'get' => [
+            'controller' => GetCartController::class,
+            'security' => 'is_granted("IS_AUTHENTICATED_FULLY")',
             'openapi_context' => [
-                'summary'=>'Permet d\'avoir accès au panier d\'un utilisateur',
-                'security' => [['bearerAuth'=>[]],
-            ]
-        ],
+                'summary' => 'Permet d\'avoir accès au panier d\'un utilisateur',
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
         ],
         'patch'
     ],
-    collectionOperations:[
-        
-    ],
-    normalizationContext:['groups'=>['read:cart']]
+    collectionOperations: [],
+    normalizationContext: ['groups' => ['read:cart']]
 )]
 class Cart
 {
@@ -49,7 +48,7 @@ class Cart
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:cart','read:User'])]
+    #[Groups(['write:User', 'read:cart', 'read:User'])]
     private $owner;
 
     /**
@@ -61,7 +60,7 @@ class Cart
     /**
      * @ORM\Column(type="float", options={"default" : 0})
      */
-    #[Groups(['read:cart','write:User'])]
+    #[Groups(['read:cart', 'write:User'])]
     private $total;
 
     public function __construct()

@@ -11,15 +11,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity(repositoryClass=CartItemRepository::class)
  */
 #[ApiResource(
-    collectionOperations:[
+    collectionOperations: [
         'get',
-        'post'=>[
-            'openapi_context'=>[
-                'summary'=>'Permet d\'ajouter un livre au panier',
+        'post' => [
+            'openapi_context' => [
+                'summary' => 'Permet d\'ajouter un livre au panier',
             ]
         ]
-                            ],
-        normalizationContext:['groups'=>['read:cartItem']]
+    ],
+    normalizationContext: ['groups' => ['read:cartItem']]
 )]
 class CartItem
 {
@@ -28,7 +28,7 @@ class CartItem
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:cart','read:cartItem'])]
+    #[Groups(['read:cart', 'read:cartItem'])]
     private $id;
 
     /**
@@ -42,13 +42,13 @@ class CartItem
      * @ORM\ManyToOne(targetEntity=Book::class, inversedBy="cartItems", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['read:cart','read:cartItem'])]
+    #[Groups(['read:cart', 'read:cartItem'])]
     private $book;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:cart','read:cartItem'])]
+    #[Groups(['read:cart', 'read:cartItem'])]
     private $quantity;
 
     public function getId(): ?int

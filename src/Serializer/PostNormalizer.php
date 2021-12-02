@@ -16,7 +16,6 @@ class PostNormalizer implements ContextAwareNormalizerInterface, NormalizerAware
 
     public function __construct(private StorageInterface $storage)
     {
-        
     }
 
     public function supportsNormalization($data, ?string $format = null, array $context = [])
@@ -29,9 +28,8 @@ class PostNormalizer implements ContextAwareNormalizerInterface, NormalizerAware
      */
     public function normalize($object, ?string $format = null, array $context = [])
     {
-        $object->setFileUrl($this->storage->resolveUri($object,'file'));
+        $object->setFileUrl($this->storage->resolveUri($object, 'file'));
         $context[self::ALREADY_CALLED] = true;
-        return $this->normalizer->normalize($object,$format,$context);
-        
+        return $this->normalizer->normalize($object, $format, $context);
     }
 }

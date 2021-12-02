@@ -22,44 +22,44 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-#[UniqueEntity('email','non disponible')]
+#[UniqueEntity('email', 'non disponible')]
 #[ApiResource(
-    collectionOperations:[
-        'post'=>[
-            'controller'=>RegistrationController::class
+    collectionOperations: [
+        'post' => [
+            'controller' => RegistrationController::class
         ],
-        'me'=>[
-            'pagination_enabled'=>false,
-            'path'=>'/me',
-            'method'=>'get',
-            'controller'=> MeController::class,
-            'read'=>false,
-            'security'=>'is_granted("ROLE_USER")',
+        'me' => [
+            'pagination_enabled' => false,
+            'path' => '/me',
+            'method' => 'get',
+            'controller' => MeController::class,
+            'read' => false,
+            'security' => 'is_granted("ROLE_USER")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ],
     ],
-    itemOperations:[
-        'getUserByUser'=>[
-            'path'=>'/users/{id}',
-            'method'=>'GET',
-            'controller'=>GetUserByUser::class,
-            'security'=>'is_granted("ROLE_USER")',
+    itemOperations: [
+        'getUserByUser' => [
+            'path' => '/users/{id}',
+            'method' => 'GET',
+            'controller' => GetUserByUser::class,
+            'security' => 'is_granted("ROLE_USER")',
             'normalization_context' => ['groups' => 'read:UserItem'],
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ],
-        'delete'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ]
     ],
-    denormalizationContext:['groups'=>'write:User'],
-    normalizationContext:['groups'=>'read:User']
+    denormalizationContext: ['groups' => 'write:User'],
+    normalizationContext: ['groups' => 'read:User']
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUserInterface
 {
@@ -68,14 +68,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:User','read:Order','read:UserItem'])]
+    #[Groups(['read:User', 'read:Order', 'read:UserItem'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\Email()
      */
-    #[Groups(['write:User','read:User','read:Order','read:UserItem']),NotBlank()]
+    #[Groups(['write:User', 'read:User', 'read:Order', 'read:UserItem']), NotBlank()]
     private $email;
 
     /**
@@ -95,26 +95,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
+    #[Groups(['write:User', 'read:User', 'read:Order', 'read:UserItem'])]
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
+    #[Groups(['write:User', 'read:User', 'read:Order', 'read:UserItem'])]
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:User','read:User','read:Order','read:UserItem'])]
+    #[Groups(['write:User', 'read:User', 'read:Order', 'read:UserItem'])]
     private $adress;
 
     /**
      * @ORM\OneToOne(targetEntity=Cart::class, inversedBy="user", cascade={"persist", "remove"}, fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['write:User','read:User'])]
+    #[Groups(['write:User', 'read:User'])]
     private $cart;
 
     /**
@@ -301,8 +301,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JWTUser
 
         return $this;
     }
-    public static function createFromPayload($id, array $payload){
-       
+    public static function createFromPayload($id, array $payload)
+    {
+
         return (new User)->setId($id)->setEmail($payload['email'] ?? '')->setRoles($payload["roles"]);
     }
 }

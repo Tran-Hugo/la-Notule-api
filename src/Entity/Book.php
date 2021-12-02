@@ -19,42 +19,42 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @Vich\Uploadable()
  */
 #[ApiResource(
-    normalizationContext:['groups'=>['read:collection']],
-    denormalizationContext:['groups'=>['write:book']],
-    collectionOperations:[
-        'get'=>[
+    normalizationContext: ['groups' => ['read:collection']],
+    denormalizationContext: ['groups' => ['write:book']],
+    collectionOperations: [
+        'get' => [
             "pagination_enabled" => false,
             "order" => ["id" => "DESC"]
         ],
-        'addBook'=>[
-            'method'=>'POST',
-            'path'=>'/books/new',
-            'controller'=>AddBookController::class,
-            'deserialize'=>false,
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'addBook' => [
+            'method' => 'POST',
+            'path' => '/books/new',
+            'controller' => AddBookController::class,
+            'deserialize' => false,
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
-            ],
-        
         ],
-    itemOperations:[
+
+    ],
+    itemOperations: [
         'get',
-        'editBook'=>[
-            'method'=>'POST',
-            'path'=>'/books/edit/{id}',
-            'controller'=>EditBookController::class,
-            'deserialize'=>false,
-            'openapi_context'=>[
-                'summary'=>'Permet d\'éditer un livre',
-                'security' => [['bearerAuth'=>[]]]
-            ],
-            'security'=>'is_granted("ROLE_ADMIN")'
-        ],
-        'delete'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'editBook' => [
+            'method' => 'POST',
+            'path' => '/books/edit/{id}',
+            'controller' => EditBookController::class,
+            'deserialize' => false,
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'summary' => 'Permet d\'éditer un livre',
+                'security' => [['bearerAuth' => []]]
+            ],
+            'security' => 'is_granted("ROLE_ADMIN")'
+        ],
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
+            'openapi_context' => [
+                'security' => [['bearerAuth' => []]]
             ]
         ],
     ]
@@ -66,43 +66,43 @@ class Book
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:collection','read:category','read:cart'])]
+    #[Groups(['read:collection', 'read:category', 'read:cart'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:cart','read:collection','read:category'])]
+    #[Groups(['write:book', 'read:cart', 'read:collection', 'read:category'])]
     private $title;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:collection','read:category'])]
+    #[Groups(['write:book', 'read:collection', 'read:category'])]
     private $author;
 
     /**
      * @ORM\Column(type="text")
      */
-    #[Groups(['write:book','read:collection','read:category'])]
+    #[Groups(['write:book', 'read:collection', 'read:category'])]
     private $description;
 
     /**
      * @ORM\Column(type="float")
      */
-    #[Groups(['write:book','read:collection','read:category','read:cart'])]
+    #[Groups(['write:book', 'read:collection', 'read:category', 'read:cart'])]
     private $price;
 
     /**
      * @ORM\Column(type="integer")
      */
-    #[Groups(['write:book','read:collection','read:category'])]
+    #[Groups(['write:book', 'read:collection', 'read:category'])]
     private $quantity;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="books", cascade={"persist"})
      */
-    #[Groups(['write:book','read:collection'])]
+    #[Groups(['write:book', 'read:collection'])]
     private $category;
 
 
@@ -121,11 +121,11 @@ class Book
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $filePath;
-    
+
     /**
      * @var string|null
      */
-    #[Groups(['read:collection','read:category','read:cart'])]
+    #[Groups(['read:collection', 'read:category', 'read:cart'])]
     private $fileUrl;
 
     /**
@@ -229,7 +229,7 @@ class Book
         return $this;
     }
 
-    
+
     /**
      * @return Collection|CartItem[]
      */
@@ -276,7 +276,7 @@ class Book
      * Get the value of file
      *
      * @return  File|null
-     */ 
+     */
     public function getFile()
     {
         return $this->file;
@@ -288,7 +288,7 @@ class Book
      * @param  File|null  $file
      *
      * @return  self
-     */ 
+     */
     public function setFile($file)
     {
         $this->file = $file;
@@ -298,7 +298,7 @@ class Book
 
     /**
      * Get the value of fileUrl
-     */ 
+     */
     public function getFileUrl()
     {
         return $this->fileUrl;
@@ -308,7 +308,7 @@ class Book
      * Set the value of fileUrl
      *
      * @return  self
-     */ 
+     */
     public function setFileUrl($fileUrl)
     {
         $this->fileUrl = $fileUrl;

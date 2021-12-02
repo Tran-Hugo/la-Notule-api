@@ -14,21 +14,19 @@ class EditUserController extends AbstractController
 {
     public function __construct(private Security $security)
     {
-        
     }
-    #[Route('api/user/edit', name:'editUser',methods:['patch'])]
+    #[Route('api/user/edit', name: 'editUser', methods: ['patch'])]
     public function editUser(Request $request, UserRepository $repo, EntityManagerInterface $em)
     {
         $userId = $this->security->getUser()->getId();
         $user = $repo->find($userId);
-        $data = json_decode($request->getContent(),true);
-        // dd(json_decode($request->getContent(),true)['firstname']);
-        $data['firstname'] ? $user->setFirstname($data['firstname']): null;
-        $data['lastname'] ? $user->setLastname($data['lastname']): null;
+        $data = json_decode($request->getContent(), true);
+        $data['firstname'] ? $user->setFirstname($data['firstname']) : null;
+        $data['lastname'] ? $user->setLastname($data['lastname']) : null;
         $data['adress'] ? $user->setAdress($data['adress']) : null;
 
         $em->persist($user);
         $em->flush();
-        return new Response("edited",200);
+        return new Response("edited", 200);
     }
 }

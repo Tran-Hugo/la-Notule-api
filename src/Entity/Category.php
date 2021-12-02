@@ -15,45 +15,46 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 #[ApiResource(
     // normalizationContext:['groups'=>['read:category']],
-    collectionOperations:[
-        'get'=>['normalization_context' => ['groups' => 'read:category']],
-        'getLimited'=>[
+    collectionOperations: [
+        'get' => ['normalization_context' => ['groups' => 'read:category']],
+        'getLimited' => [
             'normalization_context' => ['groups' => 'read:category'],
-            'path'=>'/categoriesLimited',
-            'method'=>'get',
-            'controller'=>GetCategoriesLimited::class
+            'path' => '/categoriesLimited',
+            'method' => 'get',
+            'controller' => GetCategoriesLimited::class
         ],
-        'getCatName'=>[
-            'path'=>'/categoriesNames',
-            'method'=>'get',
+        'getCatName' => [
+            'path' => '/categoriesNames',
+            'method' => 'get',
             'normalization_context' => ['groups' => 'get:categoriesName']
         ],
-        'post'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'post' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]],
-            ]
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
         ],
     ],
-    ],
-    itemOperations:[
-        'get'=>['normalization_context' => ['groups' => 'read:category']],
-        'put'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+    itemOperations: [
+        'get' => ['normalization_context' => ['groups' => 'read:category']],
+        'put' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ],
-        'delete'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ],
-        'patch'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'patch' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]]]
+                'security' => [['bearerAuth' => []]]
             ]
         ]
     ]
@@ -65,13 +66,13 @@ class Category
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['read:category','read:collection','get:categoriesName'])]
+    #[Groups(['read:category', 'read:collection', 'get:categoriesName'])]
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['write:book','read:category','read:collection','get:categoriesName'])]
+    #[Groups(['write:book', 'read:category', 'read:collection', 'get:categoriesName'])]
     private $name;
 
     /**

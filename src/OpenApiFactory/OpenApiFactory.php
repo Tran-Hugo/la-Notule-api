@@ -13,18 +13,17 @@ class OpenApiFactory implements OpenApiFactoryInterface
 {
     public function __construct(private OpenApiFactoryInterface $decorated)
     {
-        
     }
 
     public function __invoke(array $context = []): OpenApi
     {
         $openApi = $this->decorated->__invoke($context);
-        
+
         $schemas = $openApi->getComponents()->getSecuritySchemes();
         $schemas['bearerAuth'] = new ArrayObject([
-            'type'=>'http',
-            'scheme'=>'bearer',
-            'bearerFormat'=>'JWT'
+            'type' => 'http',
+            'scheme' => 'bearer',
+            'bearerFormat' => 'JWT'
         ]);
         $schemas = $openApi->getComponents()->getSchemas();
         $schemas['Credentials'] = new ArrayObject([
@@ -59,7 +58,7 @@ class OpenApiFactory implements OpenApiFactoryInterface
         ]);
         $pathItem = new PathItem(
             post: new Operation(
-                operationId:'postApiLogin',
+                operationId: 'postApiLogin',
                 tags: ['User'],
                 requestBody: new RequestBody(
                     content: new ArrayObject([
@@ -74,16 +73,14 @@ class OpenApiFactory implements OpenApiFactoryInterface
                     '200' => [
                         'description' => 'Utilisateur connecté',
                         'content' => [
-                            'application/json' => [
-                            ]
+                            'application/json' => []
                         ],
                     ]
                 ]
             )
-                    );
-            $openApi->getPaths()->addPath('/api/login',$pathItem);
+        );
+        $openApi->getPaths()->addPath('/api/login', $pathItem);
 
         return $openApi;
     }
-
 }

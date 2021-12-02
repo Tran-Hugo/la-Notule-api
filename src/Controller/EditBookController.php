@@ -13,7 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class EditBookController extends AbstractController
 {
     public function __invoke(Request $request, CategoryRepository $repo)
-    {   
+    {
         $book = $request->get('data');
         $title = $request->request->get('title');
         $author = $request->request->get('author');
@@ -22,42 +22,35 @@ class EditBookController extends AbstractController
         $quantity = $request->request->get('quantity');
         $categories = $request->request->get('categories');
         $supprImg = $request->request->get('supprImg');
-        // throw new Exception($supprImg);
-        // dd($categories);
 
         $previousCat = $book->getCategory()->getSnapshot();
-        // dd($newCat,$oldCat);
-        
+
         $file = $request->files->get('file');
         $book->setTitle($title);
         $book->setAuthor($author);
         $book->setDescription($description);
         $book->setPrice($price);
         $book->setQuantity($quantity);
-        foreach($previousCat as $cat){
+        foreach ($previousCat as $cat) {
             $book->removeCategory($cat);
         }
-        foreach($categories as $cat){
-            $cat = $repo->findOneBy(["id"=>$cat]);
-           $book->addCategory($cat); 
+        foreach ($categories as $cat) {
+            $cat = $repo->findOneBy(["id" => $cat]);
+            $book->addCategory($cat);
         }
-        
-        if($supprImg == "false"){
+
+        if ($supprImg == "false") {
             $book->setFile($file);
         } else {
             $fileSystem = new Filesystem;
-            $fileSystem->remove($this->getParameter('public')."/images/books/".$book->getFilePath());
-            
+            $fileSystem->remove($this->getParameter('public') . "/images/books/" . $book->getFilePath());
+
             $book->setFilePath(null);
             $book->setFile(null);
         }
-        
-        
-        $book->setUpdatedAt(new DateTimeImmutable());
-        
 
+        $book->setUpdatedAt(new DateTimeImmutable());
 
         return $book;
-
     }
 }

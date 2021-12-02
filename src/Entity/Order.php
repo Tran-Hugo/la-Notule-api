@@ -15,57 +15,62 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Table(name="`order`")
  */
 #[ApiResource(
-    normalizationContext:['groups'=>['read:Order']],
-    itemOperations:[
-        'delete'=>[
-            'security'=>'is_granted("ROLE_ADMIN")',
+    normalizationContext: ['groups' => ['read:Order']],
+    itemOperations: [
+        'delete' => [
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'security' => [['bearerAuth'=>[]],
-            ]
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
         ],
-    ],
-        'getByUser'=>[
-            'method'=>'get',
-            'path'=>'/user/orders/{id}',
-            'controller'=>GetByUserController::class,
-            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+        'getByUser' => [
+            'method' => 'get',
+            'path' => '/user/orders/{id}',
+            'controller' => GetByUserController::class,
+            'security' => 'is_granted("IS_AUTHENTICATED_FULLY")',
             'openapi_context' => [
-                'summary'=>'Permet de récuperer une commande en vérifiant l\'identité de la personne',
-                'security' => [['bearerAuth'=>[]],
-            ]
-        ],
+                'summary' => 'Permet de récuperer une commande en vérifiant l\'identité de la personne',
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
         ]
-        ],
-    collectionOperations:[
-        'get'=>[
+    ],
+    collectionOperations: [
+        'get' => [
             "order" => ["id" => "DESC"],
-            'security'=>'is_granted("ROLE_ADMIN")',
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'summary'=>'Permet de récuperer une commande en vérifiant l\'identité de la personne',
-                'security' => [['bearerAuth'=>[]],
-            ]
-        ],
+                'summary' => 'Permet de récuperer une commande en vérifiant l\'identité de la personne',
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
             "pagination_enabled" => false,
         ],
-        'getListByUser'=>[
-            'method'=>'GET',
-            'path'=>'/user/orders',
-            'controller'=>GetOrderListByUser::class,
-            'security'=>'is_granted("IS_AUTHENTICATED_FULLY")',
+        'getListByUser' => [
+            'method' => 'GET',
+            'path' => '/user/orders',
+            'controller' => GetOrderListByUser::class,
+            'security' => 'is_granted("IS_AUTHENTICATED_FULLY")',
             'openapi_context' => [
-                'summary'=>'Permet de récuperer les commandes d\'un utilisateur',
-                'security' => [['bearerAuth'=>[]],
-            ]
+                'summary' => 'Permet de récuperer les commandes d\'un utilisateur',
+                'security' => [
+                    ['bearerAuth' => []],
+                ]
+            ],
         ],
-        ],
-        'searchOrder'=>[
-            'method'=>'POST',
-            'path'=>'/search/order',
-            'controller'=>SearchOrderController::class,
-            'security'=>'is_granted("ROLE_ADMIN")',
+        'searchOrder' => [
+            'method' => 'POST',
+            'path' => '/search/order',
+            'controller' => SearchOrderController::class,
+            'security' => 'is_granted("ROLE_ADMIN")',
             'openapi_context' => [
-                'summary'=>'Permet de chercher les commandes par id email ou produits',
-                'security' => [['bearerAuth'=>[]],
+                'summary' => 'Permet de chercher les commandes par id email ou produits',
+                'security' => [
+                    ['bearerAuth' => []],
                 ]
             ],
         ]

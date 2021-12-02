@@ -22,9 +22,9 @@ class StripeService
     {
         \Stripe\Stripe::setApiKey($this->privateKey);
         return \Stripe\PaymentIntent::create([
-            'amount' => $cart->getTotal()*100,
-            'currency'=>'eur',
-            'payment_method_types'=>['card']
+            'amount' => $cart->getTotal() * 100,
+            'currency' => 'eur',
+            'payment_method_types' => ['card']
         ]);
     }
 
@@ -33,19 +33,18 @@ class StripeService
         $currency,
         $description,
         array $stripeParameter
-    )
-    {
+    ) {
         \Stripe\Stripe::setApiKey($this->privateKey);
         $payment_intent = null;
 
-        if(isset($stripeParameter['stripeIntentId'])) {
+        if (isset($stripeParameter['stripeIntentId'])) {
             $payment_intent = \Stripe\PaymentIntent::retrieve($stripeParameter['stripeIntentId']);
         }
-        
-        if($stripeParameter['stripeIntentStatus'] === !'succeeded'){
+
+        if ($stripeParameter['stripeIntentStatus'] === !'succeeded') {
             //TODO
             $payment_intent->cancel();
-        } 
+        }
 
         return $payment_intent;
     }

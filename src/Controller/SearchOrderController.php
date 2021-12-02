@@ -8,9 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SearchOrderController extends AbstractController
 {
-    public function __invoke(Request $request,OrderRepository $repo)
+    public function __invoke(Request $request, OrderRepository $repo)
     {
-        $search = json_decode($request->getContent(),true)['search'];
+        $search = json_decode($request->getContent(), true)['search'];
         $orders = $repo->searchedOrders($search);
         return $orders;
     }
